@@ -1,0 +1,20 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Confirmar exclusão — JARVAS Admin{% endblock %}
+
+{% block admin_content %}
+<div class="form-card confirm-card">
+    <h1 class="page-title">Confirmar exclusão</h1>
+    <p class="confirm-text">
+        Tem certeza que deseja excluir o {{ tipo }}
+        <strong>{{ objeto.nome }}</strong> ({{ objeto.email }})?
+    </p>
+    <p class="confirm-warning">Esta ação não pode ser desfeita.</p>
+
+    <form method="post" class="form-actions-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sim, excluir</button>
+        <a href="{% url voltar_url %}" class="btn btn-ghost">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

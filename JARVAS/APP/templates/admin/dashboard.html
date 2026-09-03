@@ -1,0 +1,29 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Dashboard — JARVAS Admin{% endblock %}
+
+{% block admin_content %}
+<h1 class="page-title">Dashboard</h1>
+<p class="page-subtitle">Visão geral do sistema</p>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-value">{{ total_clientes }}</span>
+        <span class="stat-label">Usuários</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ total_admins }}</span>
+        <span class="stat-label">Administradores</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ total_mensagens }}</span>
+        <span class="stat-label">Mensagens</span>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <a href="{% url 'admin_cliente_create' %}" class="btn btn-primary">Novo Usuário</a>
+    <a href="{% url 'admin_admin_create' %}" class="btn btn-secondary">Novo Administrador</a>
+    <a href="{% url 'admin_meu_perfil' %}" class="btn btn-ghost">Meu Perfil</a>
+</div>
+{% endblock %}

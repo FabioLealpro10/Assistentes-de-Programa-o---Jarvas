@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel Admin — JARVAS{% endblock %}
+{% block body_class %}page-admin{% endblock %}
+{% block main_class %}admin-layout{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-admin">
+    <div class="navbar-brand">
+        <span class="brand-icon-sm">J</span>
+        <span>Painel Admin</span>
+    </div>
+    <div class="navbar-user">
+        <a href="{% url 'admin_meu_perfil' %}" class="btn btn-ghost btn-sm">Meu perfil</a>
+        <span>{{ request.session.admin_nome }}</span>
+        <a href="{% url 'admin_logout' %}" class="btn btn-ghost btn-sm">Sair</a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<aside class="sidebar">
+    <a href="{% url 'admin_dashboard' %}" class="sidebar-link">Dashboard</a>
+    <a href="{% url 'admin_clientes_list' %}" class="sidebar-link">Usuários</a>
+    <a href="{% url 'admin_admins_list' %}" class="sidebar-link">Administradores</a>
+    <a href="{% url 'admin_meu_perfil' %}" class="sidebar-link">Meu Perfil</a>
+</aside>
+
+<div class="admin-content">
+    {% block admin_content %}{% endblock %}
+</div>
+{% endblock %}

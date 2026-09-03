@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JARVAS{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'APP/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+    <style>
+        aside {
+                width: 200px;
+            }
+
+Então,
+    </style>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+    <div id="loading-overlay" class="loading-overlay active">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Carregando...</p>
+        </div>
+    </div>
+
+    <div class="bg-glow"></div>
+
+    {% block navbar %}{% endblock %}
+
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="{% block main_class %}container{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <span>JARVAS &mdash; Assistente Inteligente</span>
+    </footer>
+
+    <script src="{% static 'APP/js/loading.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

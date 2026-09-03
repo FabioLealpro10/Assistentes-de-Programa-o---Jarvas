@@ -1,0 +1,40 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Meu Perfil — JARVAS Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Meu Perfil</h1>
+        <p class="page-subtitle">Atualize suas informações de administrador</p>
+    </div>
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-ghost">Voltar</a>
+</div>
+
+<div class="form-card">
+    <form method="post" class="form">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.name == 'senha' and admin.pk %}
+            <span class="field-hint">Deixe em branco para manter a senha atual.</span>
+            {% endif %}
+            {% for error in field.errors %}
+            <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar alterações</button>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-ghost">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat — JARVAS{% endblock %}
+{% block body_class %}page-chat{% endblock %}
+{% block main_class %}chat-layout{% endblock %}
+
+{% block navbar %}
+<nav class="navbar">
+    <div class="navbar-brand">
+        <span class="brand-icon-sm">J</span>
+        <span>JARVAS</span>
+    </div>
+    <div class="navbar-user">
+        <span>Olá, <strong>{{ cliente_nome }}</strong></span>
+        <a href="{% url 'logout' %}" class="btn btn-ghost btn-sm">Sair</a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+        
+            {% if conversas_html %}
+            {{ conversas_html|safe }}
+            {% else %}
+            <div class="chat-empty">
+                <div class="chat-empty-icon">💬</div>
+                <p>Envie uma mensagem para começar a conversar com o JARVAS.</p>
+            </div>
+            {% endif %}
+
+        
+    </div>
+    
+
+
+    <form method="post" class="chat-input-form" id="chat-form">
+        {% csrf_token %}
+        <input type="text" name="mensagem" id="mensagem-input" placeholder="Digite sua pergunta..." autocomplete="off"
+            required>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const chatBox = document.getElementById('chat-messages');
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+});
+</script>
+{% endblock %}

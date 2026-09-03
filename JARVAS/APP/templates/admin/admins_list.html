@@ -1,0 +1,68 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Administradores — JARVAS Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Administradores</h1>
+        <p class="page-subtitle">Gerencie quem tem acesso ao painel</p>
+    </div>
+    <a href="{% url 'admin_admin_create' %}" class="btn btn-primary">+ Novo Administrador</a>
+</div>
+
+<div class="table-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admin in admins %}
+            <tr>
+                <td>{{ admin.id }}</td>
+                <td>
+                    {{ admin.nome }}
+                    {% if admin.id == admin_logado_id %}
+                    <span class="badge badge-info">Você</span>
+                    {% endif %}
+                </td>
+                <td>{{ admin.email }}</td>
+                <td>
+                    {% if admin.ativo %}
+                    <span class="badge badge-success">Ativo</span>
+                    {% else %}
+                    <span class="badge badge-danger">Inativo</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{% url 'admin_admin_edit' admin.pk %}" class="btn btn-ghost btn-sm">Editar</a>
+                    {% if admin.id != admin_logado_id %}
+                    <form method="post" action="{% url 'admin_admin_toggle' admin.pk %}" class="inline-form">
+                        {% csrf_token %}
+                        {% if admin.ativo %}
+                        <button type="submit" class="btn btn-warning btn-sm">Desativar</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success btn-sm">Ativar</button>
+                        {% endif %}
+                    </form>
+                    <a href="{% url 'admin_admin_delete' admin.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                    {% else %}
+                    <a href="{% url 'admin_meu_perfil' %}" class="btn btn-secondary btn-sm">Meu perfil</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="empty-row">Nenhum administrador cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

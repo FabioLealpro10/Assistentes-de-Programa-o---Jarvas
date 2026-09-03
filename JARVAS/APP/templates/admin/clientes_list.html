@@ -1,0 +1,59 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Usuários — JARVAS Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Usuários</h1>
+        <p class="page-subtitle">Cadastre, edite, ative ou desative usuários do chat</p>
+    </div>
+    <a href="{% url 'admin_cliente_create' %}" class="btn btn-primary">+ Novo Usuário</a>
+</div>
+
+<div class="table-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.id }}</td>
+                <td>{{ cliente.nome }}</td>
+                <td>{{ cliente.email }}</td>
+                <td>
+                    {% if cliente.Usuario_ativo %}
+                    <span class="badge badge-success">Ativo</span>
+                    {% else %}
+                    <span class="badge badge-danger">Inativo</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{% url 'admin_cliente_edit' cliente.pk %}" class="btn btn-ghost btn-sm">Editar</a>
+                    <form method="post" action="{% url 'admin_cliente_toggle' cliente.pk %}" class="inline-form">
+                        {% csrf_token %}
+                        {% if cliente.Usuario_ativo %}
+                        <button type="submit" class="btn btn-warning btn-sm">Desativar</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success btn-sm">Ativar</button>
+                        {% endif %}
+                    </form>
+                    <a href="{% url 'admin_cliente_delete' cliente.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="empty-row">Nenhum usuário cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
