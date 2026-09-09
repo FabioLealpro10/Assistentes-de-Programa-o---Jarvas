@@ -2,6 +2,7 @@
 .venv/
 venv/
 
+venv_ia/
 # Variáveis de ambiente
 .env
 .env.*

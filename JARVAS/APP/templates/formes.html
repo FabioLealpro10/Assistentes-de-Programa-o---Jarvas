@@ -1,329 +1,37 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<style>
-    /* =========================
-   PÁGINA DE AUTENTICAÇÃO
-   ========================= */
-
-   body {
-        background-color: #0b0f19;
-        min-height: 100vh;
-
-        display: flex;
-
-        justify-content: center;
-        align-items: center;
-
-    }
-
-    .page-auth {
-        min-height: 100vh;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        padding: 30px 20px;
-
-        background: #0b0f19;
-    }
-
-
-    /* Fundo */
-
-    .bg-glow {
-        position: fixed;
-
-        width: 500px;
-        height: 500px;
-
-        top: -200px;
-        left: 50%;
-
-        transform: translateX(-50%);
-
-        background: radial-gradient(circle,
-                rgba(59, 130, 246, 0.18),
-                transparent 70%);
-
-        pointer-events: none;
-    }
-
-
-    /* Card */
-
-    .auth-card {
-        width: 100%;
-        max-width: 430px;
-
-        padding: 40px;
-
-        background: rgba(17, 24, 39, 0.90);
-
-        border: 1px solid rgba(255, 255, 255, 0.08);
-
-        border-radius: 18px;
-
-        box-shadow:
-            0 20px 60px rgba(0, 0, 0, 0.45);
-
-        backdrop-filter: blur(15px);
-    }
-
-
-    /* Marca */
-
-    .brand {
-        text-align: center;
-
-        margin-bottom: 30px;
-    }
-
-
-    .brand-icon {
-        width: 60px;
-        height: 60px;
-
-        margin: 0 auto 15px;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        border-radius: 16px;
-
-        font-size: 28px;
-        font-weight: 700;
-
-        color: white;
-
-        background: linear-gradient(135deg,
-                #2563eb,
-                #7c3aed);
-
-        box-shadow:
-            0 10px 30px rgba(37, 99, 235, 0.30);
-    }
-
-
-    .brand h1 {
-        margin: 0;
-
-        color: white;
-
-        font-size: 28px;
-    }
-
-
-    .subtitle {
-        margin-top: 8px;
-
-        color: #9ca3af;
-
-        font-size: 14px;
-    }
-
-
-    /* Formulário */
-
-    .form {
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 18px;
-    }
-
-
-    .form-group {
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 7px;
-    }
-
-
-    .form-group label {
-        color: #d1d5db;
-
-        font-size: 14px;
-
-        font-weight: 500;
-    }
-
-
-    /* Inputs */
-
-    .form-group input {
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding: 13px 14px;
-
-        border-radius: 9px;
-
-        border: 1px solid #374151;
-
-        outline: none;
-
-        background: #111827;
-
-        color: white;
-
-        font-size: 14px;
-
-        transition: 0.2s;
-    }
-
-
-    .form-group input::placeholder {
-        color: #6b7280;
-    }
-
-
-    .form-group input:focus {
-        border-color: #3b82f6;
-
-        box-shadow:
-            0 0 0 3px rgba(59, 130, 246, 0.15);
-    }
-
-
-    /* Botão */
-
-    .btn {
-        border: none;
-
-        cursor: pointer;
-
-        border-radius: 9px;
-
-        padding: 13px 18px;
-
-        font-size: 15px;
-
-        font-weight: 600;
-
-        transition: 0.2s;
-    }
-
-
-    .btn-block {
-        width: 100%;
-    }
-
-
-    .btn-primary {
-        color: white;
-
-        background: linear-gradient(135deg,
-                #2563eb,
-                #7c3aed);
-    }
-
-
-    .btn-primary:hover {
-        transform: translateY(-1px);
-
-        box-shadow:
-            0 8px 25px rgba(37, 99, 235, 0.30);
-    }
-
-
-    /* Link */
-
-    .auth-link {
-        margin-top: 25px;
-
-        text-align: center;
-
-        color: #9ca3af;
-
-        font-size: 14px;
-    }
-
-
-    .auth-link a {
-        color: #60a5fa;
-
-        text-decoration: none;
-
-        font-weight: 500;
-    }
-
-
-    .auth-link a:hover {
-        text-decoration: underline;
-    }
-
-
-    /* Responsividade */
-
-    @media (max-width: 500px) {
-
-        .auth-card {
-            padding: 30px 22px;
-        }
-
-        .brand h1 {
-            font-size: 24px;
-        }
-
-    }
-</style>
-
-<body>
-
-    {% block title %}{% endblock %}
-    {% block body_class %}{% endblock %}
-
-    {% block content %}
-    <div class="auth-card">
-        <div class="brand">
-            <div class="brand-icon">J</div>
-            <h1>Criar conta</h1>
-            <p class="subtitle">Cadastre-se para usar o JARVAS</p>
-        </div>
-
-        {% if mensagem %}
-        <div class="alert alert-error">{{ mensagem }}</div>
-        {% endif %}
-
-        <form method="post" class="form">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="form-group{% if field.errors %} has-error{% endif %}">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% for error in field.errors %}
-                <span class="field-error">{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% endfor %}
-            {% if form.non_field_errors %}
-            <div class="alert alert-error">
-                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
-            </div>
-            {% endif %}
-            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
-        </form>
-
-        <p class="auth-link">
-            Já tem conta? <a href="{% url 'login' %}">Fazer login</a>
-        </p>
+{% extends 'base.html' %}
+
+{% block title %}Criar conta — JARVAS{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <div class="brand">
+        <div class="brand-icon">J</div>
+        <h1>Criar conta</h1>
+        <p class="subtitle">Cadastre-se para usar o JARVAS</p>
     </div>
-    {% endblock %}
 
+    <form method="post" class="form">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+            <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+    </form>
 
-</body>
-
-</html>
+    <p class="auth-link">
+        Já tem conta? <a href="{% url 'login' %}">Fazer login</a>
+    </p>
+</div>
+{% endblock %}

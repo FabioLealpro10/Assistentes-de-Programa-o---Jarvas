@@ -7,20 +7,36 @@ from django.views.decorators.http import require_http_methods
 
 from django.utils.html import escape
 
-from .forms import AdminLoginForm, AdministradorForm, AdminPerfilForm, ClienteAdminForm
+from .forms import AdminLoginForm, AdministradorForm, AdminPerfilForm, ClienteAdminForm, ClienteForm
 from .models import Cliente, Administrador, Mensagem
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 _ia_instance = None
+_ia_erro = None
 
 
 def get_ia():
-    global _ia_instance
-    if _ia_instance is None:
-        from InteligenciaArtificial import InteligenciaArtificial as Jarvas
+    global _ia_instance, _ia_erro
+    if _ia_instance is not None:
+        return _ia_instance
+    if _ia_erro is not None:
+        raise RuntimeError(_ia_erro)
+    try:
+        from IA.InteligenciaRX580 import InteligenciaArtificial as Jarvas
         _ia_instance = Jarvas()
-    return _ia_instance
+        return _ia_instance
+    except Exception as exc:
+        _ia_erro = str(exc)
+        raise RuntimeError(_ia_erro) from exc
+
+
+def get_ia_info():
+    try:
+        from IA.InteligenciaArtificial import info_backend
+        return info_backend()
+    except Exception as exc:
+        return f"Indisponível ({exc})"
 
 
 def formatar_bloco_codigo(conteudo):
@@ -114,6 +130,22 @@ def login(request):
     return render(request, 'index.html', {'mensagem': mensagem})
 
 
+def cadastro(request):
+    if request.session.get('cliente_id'):
+        return redirect('chat')
+
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Conta criada com sucesso! Faça login para continuar.')
+            return redirect('login')
+    else:
+        form = ClienteForm()
+
+    return render(request, 'formes.html', {'form': form})
+
+
 def logout_cliente(request):
     request.session.flush()
     return redirect('login')
@@ -127,14 +159,23 @@ def chat(request):
     if request.method == 'POST':
         texto = request.POST.get('mensagem', '').strip()
         if texto:
-            resposta = get_ia().inferencia(texto)
             Mensagem.cadastrar(texto, False, cliente_id)
-            Mensagem.cadastrar(resposta, True, cliente_id)
+            try:
+                resposta = get_ia().inferencia(texto)
+                Mensagem.cadastrar(resposta, True, cliente_id)
+            except RuntimeError as exc:
+                messages.error(
+                    request,
+                    f'IA indisponível: {exc}',
+                )
 
     conversas = Mensagem.listar_por_usuario(cliente_id)
+    ia_ativa = _ia_instance is not None
     return render(request, 'chat.html', {
         'cliente_nome': cliente_nome,
         'conversas_html': renderizar_mensagens(conversas),
+        'ia_info': get_ia_info() if not ia_ativa else _ia_instance.device_descricao,
+        'ia_carregada': ia_ativa,
     })
 
 

@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: jarvas123
+      MYSQL_DATABASE: IA_JARVAS
+    volumes:
+      - jarvas_mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pjarvas123"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "True"
+      ALLOWED_HOSTS: "127.0.0.1,localhost,web"
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_USER: root
+      DB_PASSWORD: jarvas123
+      DB_NAME: IA_JARVAS
+      SECRET_KEY: django-insecure-dev-key-change-in-production
+      JARVAS_IA_DEVICE: cpu
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+
+volumes:
+  jarvas_mysql_data:
+  huggingface_cache:

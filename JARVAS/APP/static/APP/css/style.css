@@ -591,6 +591,14 @@ body.page-chat .chat-layout {
     box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.13);
 }
 
+.chat-ia-info {
+    margin: 0;
+    padding: 0 4px 8px;
+    font-size: 12px;
+    color: #6b7280;
+    text-align: center;
+}
+
 
 /* =====================================================
    ADMIN PANEL

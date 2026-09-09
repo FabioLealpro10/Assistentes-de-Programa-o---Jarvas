@@ -26,6 +26,13 @@ class ClienteForm(forms.ModelForm):
             raise forms.ValidationError('As senhas não conferem.')
         return dados
 
+    def save(self, commit=True):
+        cliente = super().save(commit=False)
+        cliente.senha = make_password(self.cleaned_data['senha'])
+        if commit:
+            cliente.save()
+        return cliente
+
 
 class AdminLoginForm(forms.Form):
     email = forms.EmailField(

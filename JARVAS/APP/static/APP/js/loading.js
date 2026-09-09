@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('form').forEach(function (form) {
         form.addEventListener('submit', function () {
             if (form.classList.contains('chat-input-form')) {
-                showLoading('JARVAS está pensando...');
+                showLoading('JARVAS está pensando... <br> Tempo estimado: 1 a 5 minutos');
             } else {
                 showLoading('Carregando...');
             }

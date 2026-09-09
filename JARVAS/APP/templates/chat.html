@@ -41,6 +41,9 @@
             required>
         <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
+    <p class="chat-ia-info" title="Modo de execução da inteligência artificial">
+        IA: {% if ia_carregada %}ativa — {{ ia_info }}{% else %}pronta — {{ ia_info }}{% endif %}
+    </p>
 </div>
 {% endblock %}
 
