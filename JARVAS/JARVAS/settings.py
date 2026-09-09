@@ -88,11 +88,15 @@ WSGI_APPLICATION = 'JARVAS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'localhost',
-        'PORT': '3307',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'NAME': 'IA_JARVAS',
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '12345'),
+        'NAME': os.environ.get('DB_NAME', 'IA_JARVAS'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 

@@ -23,8 +23,8 @@ def get_ia():
     if _ia_erro is not None:
         raise RuntimeError(_ia_erro)
     try:
-        from IA.InteligenciaRX580 import InteligenciaArtificial as Jarvas
-        _ia_instance = Jarvas()
+        from IA.InteligenciaArtificial import InteligenciaArtificial
+        _ia_instance = InteligenciaArtificial()
         return _ia_instance
     except Exception as exc:
         _ia_erro = str(exc)
@@ -33,7 +33,7 @@ def get_ia():
 
 def get_ia_info():
     try:
-        from IA.InteligenciaArtificial import info_backend
+        from IA.backend import info_backend
         return info_backend()
     except Exception as exc:
         return f"Indisponível ({exc})"
